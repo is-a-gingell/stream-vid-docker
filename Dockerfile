@@ -31,12 +31,12 @@ RUN apt-get update \
     xdg-utils \
   && rm -rf /var/lib/apt/lists/*
 
-COPY package.json package-lock.json ./
+COPY extract_urls.js ./
 
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-RUN npm ci --omit=dev \
+RUN npm init -y \
+  && npm pkg set type=commonjs \
+  && npm install --omit=dev playwright@1.59.1 \
   && npx playwright install chromium
-
-COPY extract_urls.js ./
 
 ENTRYPOINT ["node", "extract_urls.js"]
